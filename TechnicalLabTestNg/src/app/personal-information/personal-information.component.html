@@ -1,0 +1,82 @@
+<div class="container-fluid">
+    <div class="card">
+
+        <div class="card-body">
+            <form class="form-horizontal" autocomplete="off" [formGroup]="personalInfomationForm" (ngSubmit)="onAdd()">
+                <div class="form-group">
+                    <label for="Name" class="form-label">Name</label>
+                    <input type="text" class="form-control" name="Name" id="name" formControlName="name" [ngClass]="{ 'is-invalid': submitted && personalInfo.name.errors }" placeholder="Enter Name" />
+                    <div *ngIf="submitted && personalInfo.name?.errors" class="invalid-feedback">
+                        <div *ngIf=" personalInfo.name.errors?.required">Name is required!!
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                        <div class="form-group">
+                            <select formControlName="countryId" (change)="countryChangedvalue($event)" id="countryId" class="custom-select " [ngClass]="{ 'is-invalid': (personalInfo.countryId.touched || submitted )  && personalInfo.countryId?.errors }">
+                                <option value="null">Select Country*</option>
+                                <option *ngFor="let country of countryList" [value]="country.id">
+                                    {{country.name}}</option>
+                            </select>
+                            <div *ngIf="(personalInfo.countryId.touched || submitted )  && personalInfo.countryId?.errors" class="invalid-feedback">
+                                <div *ngIf="personalInfo.countryId.errors?.required">Country is required!!</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <select formControlName="cityId" id="countryId" class="custom-select " [ngClass]="{ 'is-invalid': (personalInfo.cityId.touched || submitted )  && personalInfo.cityId?.errors }">
+                                <option value="null">Select City*</option>
+                                <option *ngFor="let city of cityList" [value]="city.id">
+                                    {{city.name}}</option>
+                            </select>
+                            <div *ngIf="(personalInfo.cityId.touched || submitted )  && personalInfo.countryId?.errors" class="invalid-feedback">
+                                <div *ngIf="personalInfo.cityId.errors?.required">City is required!!</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div>
+                        <label class="form-label">Language Skill</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <ng-container *ngFor="let item of personalInfomationForm.get('personalInformationDetails')['controls']; let i = index;" formArrayName="personalInformationDetails">
+                            <ng-container formGroupName="{{i}}">
+                                <div>
+                                    <label class="form-check-label mx-2"><b>{{item.value.languageName}}</b></label>
+                                    <input class="form-check-input" formControlName="isChecked" type="checkbox">
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="dateofBirth" class="form-label">Date Of Birth</label>
+                    <input type="text" class="form-control" name="Name" id="name" formControlName="dateTime"  #dp="bsDatepicker" bsDatepicker [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }" [ngClass]="{ 'is-invalid': submitted && personalInfo.dateTime?.errors }" placeholder="Enter Birth Date" />
+                    <div *ngIf="submitted && personalInfo.dateTime?.errors" class="invalid-feedback">
+                        <div *ngIf=" personalInfo.dateTime.errors?.required">Birth date is required!!
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="form-group">
+                    <div class="mb-3">
+                        <label for="formfile">Resume Upload</label>
+                        <input class="form-control" name="file" type="file" id="formFile" (change)=" $ValidationCheckFile($event)" formControlName="file" accept="application/pdf,application/msword" [ngClass]="{ 'is-invalid': submitted && personalInfo.file.errors }">
+                    </div>
+                    <div *ngIf="submitted && personalInfo.file?.errors" class="invalid-feedback">
+                        <div *ngIf=" personalInfo.file.errors?.required">>Resume field is required!! </div>
+                        <div *ngIf=" personalInfo.file.errors?.notValid">Only .pdf and .doc file submit!!
+                        </div>
+                    </div>
+                </div> -->
+                <button class="btn btn-primary" type=submit style="float: right;">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
