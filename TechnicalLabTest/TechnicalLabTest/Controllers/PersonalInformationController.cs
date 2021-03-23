@@ -120,31 +120,43 @@ namespace TechnicalLabTest.Controllers
             if (ModelState.IsValid)
             {
                 var modelDetail = model.PersonalInformationDetails;
-                using (TransactionScope transactionScope = new TransactionScope())
-                {
+                
 
                     try
 
                     {
+                        foreach (var detail in modelDetail)
+                        {
+                            db.Entry(detail).State = EntityState.Modified;
+                        }
+
+                        model.PersonalInformationDetails = null;
+                        var data = db.PersonalInformations.Include(c => c.PersonalInformationDetails).FirstOrDefault(c => c.Id == id);
+                        if (data != null)
+                        {
+                            data.Name = model.Name;
+                            data.CountryId = model.CountryId;
+                            data.CityId = model.CityId;
+                            data.DateTime = model.DateTime;
+                            db.Entry(data).State = EntityState.Modified;
+                         
+                        }
+
                        
-                        db.Entry(modelDetail).State = EntityState.Modified;
-                        db.Entry(model).State = EntityState.Modified;
                         var isUpdate = db.SaveChanges() > 0;
                         if (isUpdate)
                         {
                             return Ok(model);
                         }
+                       
                     }
 
                     catch (TransactionException ex)
 
                     {
-
-                        transactionScope.Dispose();
                         return BadRequest(new { error = ex.Message });
                     }
 
-                }
             }
             
             return BadRequest(new { error = "Failed!" });
